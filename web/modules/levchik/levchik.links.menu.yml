@@ -1,0 +1,6 @@
+levchik.settings_form:
+  title: levchik
+  description: Configure levchik.
+  parent: system.admin_config_system
+  route_name: levchik.settings_form
+  weight: 10

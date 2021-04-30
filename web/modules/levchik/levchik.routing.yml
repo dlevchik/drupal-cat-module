@@ -1,0 +1,15 @@
+levchik.example:
+  path: '/levchik/example'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\levchik\Controller\LevchikController::build'
+  requirements:
+    _permission: 'access content'
+
+levchik.settings_form:
+  path: '/admin/config/system/levchik'
+  defaults:
+    _title: 'levchik settings'
+    _form: 'Drupal\levchik\Form\SettingsForm'
+  requirements:
+    _permission: 'administer levchik configuration'
