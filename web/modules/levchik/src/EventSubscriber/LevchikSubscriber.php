@@ -59,5 +59,4 @@ class LevchikSubscriber implements EventSubscriberInterface {
       KernelEvents::RESPONSE => ['onKernelResponse'],
     ];
   }
-
 }

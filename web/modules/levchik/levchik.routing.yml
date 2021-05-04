@@ -1,7 +1,7 @@
-levchik.example:
-  path: '/levchik/example'
+levchik.cats:
+  path: '/levchik/cats'
   defaults:
-    _title: 'Example'
+    _title: 'Cats'
     _controller: '\Drupal\levchik\Controller\LevchikController::build'
   requirements:
     _permission: 'access content'
