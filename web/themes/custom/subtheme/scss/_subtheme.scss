@@ -11,6 +11,14 @@ header.header{
     min-height: 70vh;
 }
 
+.toast-wrapper{
+    top: 100px;
+
+    .toast{
+        opacity: 1;
+    }
+}
+
 footer.footer{
     padding: 50px 0;
     background-color: gray;
