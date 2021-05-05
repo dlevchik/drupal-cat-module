@@ -1,0 +1,21 @@
+header.header{
+    background-color: gray;
+}
+
+.breadcrumb{
+    background-color: inherit;
+    text-decoration: underline;
+}
+
+.layout-main-wrapper{
+    min-height: 70vh;
+}
+
+footer.footer{
+    padding: 50px 0;
+    background-color: gray;
+
+    .region-footer-fifth{
+        justify-content: space-between;
+    }
+}
