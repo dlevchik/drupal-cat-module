@@ -4,6 +4,8 @@ namespace Drupal\levchik\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
 
 /**
  * Provides a levchik form.
@@ -35,6 +37,13 @@ class CatsForm extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add cat'),
+      '#ajax' => [
+        'callback' => '::ajaxFunc',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => NULL,
+        ),
+      ]
     ];
 
     return $form;
@@ -58,6 +67,19 @@ class CatsForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The message has been sent.'));
     $form_state->setRedirect('levchik.cats');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function ajaxFunc(array $form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    $response->addCommand(
+      new HtmlCommand(
+        '.levchik-cats',
+        $this->t("Thank's for your submission!")),
+    );
+    return $response;
   }
 
 }
