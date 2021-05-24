@@ -1,4 +1,0 @@
-administer levchik configuration:
-  title: 'Administer levchik configuration'
-  description: 'Optional description.'
-  restrict access: true

@@ -1,4 +1,4 @@
-/* 
+/*
 Theme Name: Bootstrap 4 Sass
 Description: Bootstrap 4 with Sass
 */
@@ -14,7 +14,7 @@ body {
 }
 
 
-/* COLORS 
+/* COLORS
 --------------------------------------------------*/
 
 a {
@@ -57,4 +57,14 @@ a {
 
 .slick>div {
     margin: 0 15px;
+}
+
+fieldset.error{
+  input{
+    border-color: red;
+    box-shadow: 0 0 0 0.2rem rgba(255, 121, 192, .25);
+  }
+  small{
+    color: red !important;
+  }
 }
