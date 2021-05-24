@@ -30,6 +30,7 @@ class CatsForm extends FormBase {
       '#title' => $this->t('Your cat’s name:'),
       '#required' => TRUE,
       '#description' => $this->t('Min name length: 2, max: 32'),
+      '#maxlength' => 32,
     ];
 
     $form['email'] = [
@@ -46,6 +47,19 @@ class CatsForm extends FormBase {
           'message' => NULL,
         ],
       ],
+    ];
+
+    $form['cat_img'] = [
+      '#type' => 'managed_file',
+      '#name' => 'cat_img',
+      '#title' => t("Your cat's photo:"),
+      '#required' => TRUE,
+      '#size' => 2,
+      '#upload_validators' => [
+        'file_validate_size' => [2097152],
+        'file_validate_extensions' => ['gif jpg jpeg'],
+      ],
+      // '#upload_location' => 'public://my_files/',
     ];
 
     $form['actions'] = [
