@@ -1,1 +1,10 @@
 version: "2.1"
+services:
+  # PHPMyAdmin
+ pma:
+  hostname: pma
+  image: phpmyadmin/phpmyadmin
+  environment:
+    - PMA_HOST=db
+  labels:
+    - io.docksal.virtual-host=pma.${VIRTUAL_HOST}

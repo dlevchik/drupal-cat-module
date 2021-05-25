@@ -23,35 +23,14 @@ function levchik_uninstall() {
  * Implements hook_schema().
  */
 function levchik_schema() {
-  $schema['levchik_example'] = [
-    'description' => 'Table description.',
+  $schema['levchik'] = [
+    'description' => "Table to store user's cats data.",
     'fields' => [
       'id' => [
         'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique record ID.',
-      ],
-      'uid' => [
-        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {users}.uid of the user who created the record.',
-      ],
-      'status' => [
-        'description' => 'Boolean indicating whether this record is active.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ],
-      'type' => [
-        'type' => 'varchar_ascii',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Type of the record.',
+        'description' => 'Primary Key.',
       ],
       'created' => [
         'type' => 'int',
@@ -59,18 +38,40 @@ function levchik_schema() {
         'default' => 0,
         'description' => 'Timestamp when the record was created.',
       ],
-      'data' => [
-        'type' => 'blob',
+      'name' => [
+        'type' => 'varchar',
         'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'The arbitrary data for the item.',
+        'length' => 64,
+        'default' => '',
+        'description' => "Cats name.",
+      ],
+      'email' => [
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 128,
+        // 'size' => 255,
+        'default' => '',
+        'description' => "Cats owner email.",
+      ],
+      'picture_fid' => [
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 128,
+        'default' => '',
+        'description' => "Cats picture.",
       ],
     ],
     'primary key' => ['id'],
     'indexes' => [
-      'type' => ['type'],
-      'uid' => ['uid'],
-      'status' => ['status'],
+      'created' => ['created'],
+      'name' => ['name'],
+      'email' => ['email'],
+    ],
+    'foreign keys' => [
+      'picture_fid' => [
+        'table' => 'file_managed',
+        'columns' => ['picture_fid' => 'fid'],
+      ],
     ],
   ];
 
