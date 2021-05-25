@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\file\Entity\File;
 
 /**
  * Provides a levchik form.
@@ -41,7 +42,7 @@ class CatsForm extends FormBase {
       '#ajax' => [
         'callback' => '::validateEmailAjax',
         'effect' => 'fade',
-        'event' => 'input',
+        'event' => 'change',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
@@ -56,10 +57,11 @@ class CatsForm extends FormBase {
       '#required' => TRUE,
       '#size' => 2,
       '#upload_validators' => [
+        'file_validate_is_image' => [],
         'file_validate_size' => [2097152],
         'file_validate_extensions' => ['gif jpg jpeg'],
       ],
-      // '#upload_location' => 'public://my_files/',
+      '#upload_location' => 'public://levchik/',
     ];
 
     $form['actions'] = [
@@ -99,7 +101,22 @@ class CatsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // $form_state->setRedirect('levchik.cats');
+    $connection = \Drupal::service('database');
+    $file_fid = $form_state->getValue('cat_img')[0];
+    $file = File::load($form_state->getValue('cat_img')[0]);
+    if ($file) {
+      $file->setPermanent();
+      $file->save();
+    }
+    $connection->insert('levchik')
+      ->fields(['name', 'created', 'email', 'picture_fid'])
+      ->values([
+        'name' => $form_state->getValue('catName'),
+        'created' => \Drupal::time()->getRequestTime(),
+        'email' => $form_state->getValue('email'),
+        'picture_fid' => $file_fid ? $file_fid : "",
+      ])
+      ->execute();
   }
 
   /**
