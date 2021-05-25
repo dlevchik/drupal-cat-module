@@ -19,8 +19,18 @@ class LevchikController extends ControllerBase {
       '#markup' => $this->t('Hello! You can add here a photo of your cat.'),
     ];
     $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\levchik\Form\CatsForm');
-
+    $this->getCats();
     return $build;
+  }
+
+  public function getCats() {
+    $database = \Drupal::database();
+    $query = $database->select('levchik', 'lv');
+    $query->fields('lv');
+    $query->orderBy('created', 'DESC');
+
+    $result = $query->execute()->fetchAll();
+    return $result;
   }
 
 }

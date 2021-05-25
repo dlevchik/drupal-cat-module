@@ -103,8 +103,8 @@ class CatsForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $connection = \Drupal::service('database');
     $file_fid = $form_state->getValue('cat_img')[0];
-    $file = File::load($form_state->getValue('cat_img')[0]);
-    if ($file) {
+    if ($file_fid) {
+      $file = File::load($file_fid);
       $file->setPermanent();
       $file->save();
     }
@@ -114,7 +114,7 @@ class CatsForm extends FormBase {
         'name' => $form_state->getValue('catName'),
         'created' => \Drupal::time()->getRequestTime(),
         'email' => $form_state->getValue('email'),
-        'picture_fid' => $file_fid ? $file_fid : "",
+        'picture_fid' => $file_fid ? $file_fid : 0,
       ])
       ->execute();
   }
