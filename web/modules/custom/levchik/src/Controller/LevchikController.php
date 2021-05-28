@@ -13,16 +13,26 @@ class LevchikController extends ControllerBase {
    * Builds the response.
    */
   public function build() {
+    $cats = $this->getCats();
 
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Hello! You can add here a photo of your cat.'),
+    $build = [
+      'content' => [
+        '#type' => 'item',
+        '#markup' => $this->t('Hello! You can add here a photo of your cat.'),
+      ],
+      'form' => \Drupal::formBuilder()->getForm('\Drupal\levchik\Form\CatsForm'),
+      'cats' => [
+        '#theme' => 'levchik-theme-hook',
+        'cats' => $cats,
+      ],
     ];
-    $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\levchik\Form\CatsForm');
-    $this->getCats();
+
     return $build;
   }
 
+  /**
+   * Get's cats array from db.
+   */
   public function getCats() {
     $database = \Drupal::database();
     $query = $database->select('levchik', 'lv');

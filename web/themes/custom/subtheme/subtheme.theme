@@ -30,3 +30,15 @@ function subtheme_form_system_theme_settings_alter(&$form, FormStateInterface $f
     'bg-transparent' => t('Transparent'),
   );
 }
+
+/**
+ * Implements hook_theme().
+ */
+function subtheme_theme($existing, $type, $theme, $path) {
+  return [
+    'levchik-theme-hook' => [
+      'render element' => 'children',
+      'template' => 'cats-item',
+    ],
+  ];
+}
