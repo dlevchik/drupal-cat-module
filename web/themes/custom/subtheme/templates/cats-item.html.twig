@@ -9,8 +9,15 @@
         <span class="created-date">{{ "Cat was added"|t }}: {{ cat.created|date("j/m/Y H:i:s") }}</span>
         <span>{{ "Cat's name"|t }}: {{ cat.name }}</span>
         <span>{{ "Cat's owner email"|t }}: {{ cat.email }}</span>
+        {% if is_admin %}
+          <div class="btn-group" role="group">
+            <a class="btn btn-outline-danger" type="button" href="/levchik/cats/{{ cat.id }}/delete">{{ "Delete cat entity"|t }}</a>
+            <a class="btn btn-outline-warning" type="button" href="/levchik/cats/{{ cat.id }}/edit">{{ "Edit cat entity"|t }}</a>
+          </div>
+        {% endif %}
       </div>
     </li>
   {% endfor %}
   </ul>
+  {{ dump() }}
 {% endif %}
