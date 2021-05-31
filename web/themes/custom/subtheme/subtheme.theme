@@ -36,9 +36,12 @@ function subtheme_form_system_theme_settings_alter(&$form, FormStateInterface $f
  */
 function subtheme_theme($existing, $type, $theme, $path) {
   return [
-    'levchik-theme-hook' => [
-      'render element' => 'children',
+    'levchik_theme_hook' => [
+      'variables' => [
+        'cats' => NULL,
+      ],
       'template' => 'cats-item',
     ],
   ];
 }
+

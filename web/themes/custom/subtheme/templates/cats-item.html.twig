@@ -1,2 +1,9 @@
-{{ dump(cats) }}
-{{ cats }}
+{% if cats is not empty %}
+  <ul class="cats-containter">
+  {% for cat in cats %}
+    <li class="cats-item">
+      {{ dump(cat) }}
+    </li>
+  {% endfor %}
+  </ul>
+{% endif %}

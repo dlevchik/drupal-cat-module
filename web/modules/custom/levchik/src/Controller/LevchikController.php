@@ -22,8 +22,8 @@ class LevchikController extends ControllerBase {
       ],
       'form' => \Drupal::formBuilder()->getForm('\Drupal\levchik\Form\CatsForm'),
       'cats' => [
-        '#theme' => 'levchik-theme-hook',
-        'cats' => $cats,
+        '#theme' => 'levchik_theme_hook',
+        '#cats' => $cats,
       ],
     ];
 
@@ -40,6 +40,17 @@ class LevchikController extends ControllerBase {
     $query->orderBy('created', 'DESC');
 
     $result = $query->execute()->fetchAll();
+    foreach ($result as $item) {
+      $fid = $item->picture_fid ? $item->picture_fid : 0;
+      if (isset($fid) && $fid != 0) {
+        $file = \Drupal\file\Entity\File::load($fid);
+        $uri = $file->getFileUri();
+        $url = \Drupal\Core\Url::fromUri(file_create_url($uri))->toString();
+      } else {
+        $url = "http://local.docksal/sites/default/files/levchik/underfined-cat.jpeg";
+      }
+      $item->picture_src = $url;
+    }
     return $result;
   }
 
