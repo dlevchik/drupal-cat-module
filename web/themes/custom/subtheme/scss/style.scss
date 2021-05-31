@@ -68,3 +68,29 @@ fieldset.error{
     color: red !important;
   }
 }
+
+.cats-containter{
+  list-style: none;
+  .cats-item{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    border: 2px solid $black;
+    padding: 20px;
+    .img-container{
+      width: 20%;
+      height: fit-content;
+      img{
+        width: 100%;
+        height: auto;
+      }
+    }
+    .cat-data{
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
