@@ -16,7 +16,7 @@
 
 # Ignore Drupal's file directory
 /web/sites/*/files/
-!/web/sites/default/files/levchik
+!/web/sites/default/files/levchik/
 
 # Ignore SimpleTest multi-site environment.
 /web/sites/simpletest
