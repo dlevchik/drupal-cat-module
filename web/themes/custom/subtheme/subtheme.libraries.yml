@@ -1,6 +1,6 @@
 global-styling:
   version: VERSION
-  js: 
+  js:
     js/popper.min.js: {}
     js/bootstrap.min.js: {}
     js/global.js: {}
@@ -10,3 +10,5 @@ global-styling:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.dialog.ajax
+    - core/jquery.form

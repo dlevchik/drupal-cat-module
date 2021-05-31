@@ -11,13 +11,20 @@
         <span>{{ "Cat's owner email"|t }}: {{ cat.email }}</span>
         {% if is_admin %}
           <div class="btn-group" role="group">
-            <a class="btn btn-outline-danger" type="button" href="/levchik/cats/{{ cat.id }}/delete">{{ "Delete cat entity"|t }}</a>
-            <a class="btn btn-outline-warning" type="button" href="/levchik/cats/{{ cat.id }}/edit">{{ "Edit cat entity"|t }}</a>
+            <a class="btn btn-outline-danger use-ajax"
+               data-dialog-options="{&quot;width&quot;:400}"
+               data-dialog-type="modal"
+               type="button"
+               href="/levchik/cats/{{ cat.id }}/delete">{{ "Delete cat entity"|t }}</a>
+            <a class="btn btn-outline-warning use-ajax"
+               data-dialog-options="{&quot;width&quot;:400}"
+               data-dialog-type="modal"
+               type="button"
+               href="/levchik/cats/{{ cat.id }}/edit">{{ "Edit cat entity"|t }}</a>
           </div>
         {% endif %}
       </div>
     </li>
   {% endfor %}
   </ul>
-  {{ dump() }}
 {% endif %}

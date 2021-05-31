@@ -13,3 +13,12 @@ levchik.settings_form:
     _form: 'Drupal\levchik\Form\SettingsForm'
   requirements:
     _permission: 'administer levchik configuration'
+
+levchik.delete_form:
+  path: '/levchik/cats/{id}/delete'
+  defaults:
+    _form: '\Drupal\levchik\Form\ConfirmDeleteForm'
+    _title: 'Confirm Deletion'
+  requirements:
+    _permission: 'administer site configuration'
+    id: ^\d+$

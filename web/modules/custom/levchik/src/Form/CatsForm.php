@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 
 /**
@@ -117,6 +118,8 @@ class CatsForm extends FormBase {
         'picture_fid' => $file_fid ? $file_fid : 0,
       ])
       ->execute();
+    // \Drupal\levchik\Controller\LevchikController::getCats()[0];
+    $form_state->setRedirectUrl(Url::fromRoute('levchik.cats'));
   }
 
   /**
@@ -173,8 +176,8 @@ class CatsForm extends FormBase {
     if (!$form_state->hasAnyErrors()) {
       $response->addCommand(
         new HtmlCommand(
-          '.levchik-cats',
-          $this->t("Thank's for your submission!"),
+          '.block-system-main-block',
+          $this->t("Thank's for your submission! Please refresh page to see the changes!"),
         ),
       );
     }

@@ -3,6 +3,8 @@
 namespace Drupal\levchik\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\file\Entity\File as File;
+use Drupal\Core\Url as Url;
 
 /**
  * Returns responses for levchik routes.
@@ -43,10 +45,11 @@ class LevchikController extends ControllerBase {
     foreach ($result as $item) {
       $fid = $item->picture_fid ? $item->picture_fid : 0;
       if (isset($fid) && $fid != 0) {
-        $file = \Drupal\file\Entity\File::load($fid);
+        $file = File::load($fid);
         $uri = $file->getFileUri();
-        $url = \Drupal\Core\Url::fromUri(file_create_url($uri))->toString();
-      } else {
+        $url = Url::fromUri(file_create_url($uri))->toString();
+      }
+      else {
         $url = "http://local.docksal/sites/default/files/levchik/underfined-cat.jpeg";
       }
       $item->picture_src = $url;
