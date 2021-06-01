@@ -1,6 +1,6 @@
-levchik.settings_form:
-  title: levchik
-  description: Configure levchik.
-  parent: system.admin_config_system
-  route_name: levchik.settings_form
+levchik.admin:
+  title: Cats
+  description: Administer this cute cats.
+  parent: system.admin_structure
+  route_name: levchik.cats_list
   weight: 10

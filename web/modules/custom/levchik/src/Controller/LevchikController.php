@@ -12,7 +12,7 @@ use Drupal\Core\Url as Url;
 class LevchikController extends ControllerBase {
 
   /**
-   * Builds the response.
+   * Builds the response for cats page.
    */
   public function build() {
     $cats = $this->getCats();
@@ -29,6 +29,19 @@ class LevchikController extends ControllerBase {
       ],
     ];
 
+    return $build;
+  }
+
+  /**
+   * Builds the response table for administer cats page.
+   */
+  public function adminList() {
+    $build = [
+      'content' => [
+        '#type' => 'item',
+        '#markup' => $this->t('Hello! You can administer of your cats.'),
+      ],
+    ];
     return $build;
   }
 

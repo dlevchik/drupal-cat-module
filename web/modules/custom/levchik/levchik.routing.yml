@@ -23,3 +23,11 @@ levchik.edit_form:
   requirements:
     _permission: 'administer levchik cats'
     id: ^\d+$
+
+levchik.cats_list:
+  path: '/admin/structure/cats'
+  defaults:
+    _title: 'Administer Cats'
+    _controller: '\Drupal\levchik\Controller\LevchikController::adminList'
+  requirements:
+    _permission: 'administer levchik cats'
