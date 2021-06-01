@@ -6,19 +6,20 @@ levchik.cats:
   requirements:
     _permission: 'access content'
 
-levchik.settings_form:
-  path: '/admin/config/system/levchik'
-  defaults:
-    _title: 'levchik settings'
-    _form: 'Drupal\levchik\Form\SettingsForm'
-  requirements:
-    _permission: 'administer levchik configuration'
-
 levchik.delete_form:
   path: '/levchik/cats/{id}/delete'
   defaults:
     _form: '\Drupal\levchik\Form\ConfirmDeleteForm'
     _title: 'Confirm Deletion'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer levchik cats'
+    id: ^\d+$
+
+levchik.edit_form:
+  path: '/levchik/cats/{id}/edit'
+  defaults:
+    _form: '\Drupal\levchik\Form\CatsForm'
+    _title: 'Edit a cat'
+  requirements:
+    _permission: 'administer levchik cats'
     id: ^\d+$

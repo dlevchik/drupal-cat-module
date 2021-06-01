@@ -1,4 +1,4 @@
-administer levchik configuration:
-  title: 'Administer levchik configuration'
-  description: 'Optional description.'
+administer levchik cats:
+  title: 'Administer levchik cats'
+  description: 'Allow user to edit and delete cats.'
   restrict access: true

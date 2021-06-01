@@ -9,11 +9,25 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\levchik\Controller\LevchikController as LevchikController;
 
 /**
  * Provides a levchik form.
  */
 class CatsForm extends FormBase {
+
+  /**
+   * ID of the item to edit.
+   *
+   * @var int
+   */
+  protected $id;
+  /**
+   * Cat data object.
+   *
+   * @var object
+   */
+  protected $cat;
 
   /**
    * {@inheritdoc}
@@ -25,14 +39,18 @@ class CatsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-
+  public function buildForm(array $form, FormStateInterface $form_state, string $id = NULL) {
+    $this->id = $id;
+    if (!is_null($id)) {
+      $this->cat = LevchikController::getCats($this->id)[0];
+    }
     $form['catName'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Your cat’s name:'),
       '#required' => TRUE,
       '#description' => $this->t('Min name length: 2, max: 32'),
       '#maxlength' => 32,
+      '#default_value' => $this->cat ? $this->cat->name : "",
     ];
 
     $form['email'] = [
@@ -49,6 +67,7 @@ class CatsForm extends FormBase {
           'message' => NULL,
         ],
       ],
+      '#default_value' => $this->cat ? $this->cat->email : "",
     ];
 
     $form['cat_img'] = [
@@ -63,6 +82,7 @@ class CatsForm extends FormBase {
         'file_validate_extensions' => ['gif jpg jpeg'],
       ],
       '#upload_location' => 'public://levchik/',
+      '#default_value' => $this->cat ? [$this->cat->picture_fid] : "",
     ];
 
     $form['actions'] = [
@@ -70,7 +90,7 @@ class CatsForm extends FormBase {
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Add cat'),
+      '#value' => $this->t('Save cat'),
       '#ajax' => [
         'callback' => '::ajaxFunc',
         'progress' => [
@@ -102,35 +122,93 @@ class CatsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $connection = \Drupal::service('database');
-    $file_fid = $form_state->getValue('cat_img')[0];
-    if ($file_fid) {
-      $file = File::load($file_fid);
-      $file->setPermanent();
-      $file->save();
+    $cat = new \stdClass();
+    $cat->name = $form_state->getValue('catName');
+    $cat->email = $form_state->getValue('email');
+    $cat->picture_fid = $form_state->getValue('cat_img')[0];
+    if (!is_null($this->id)) {
+      $this->editCat($cat);
     }
-    $connection->insert('levchik')
-      ->fields(['name', 'created', 'email', 'picture_fid'])
-      ->values([
-        'name' => $form_state->getValue('catName'),
-        'created' => \Drupal::time()->getRequestTime(),
-        'email' => $form_state->getValue('email'),
-        'picture_fid' => $file_fid ? $file_fid : 0,
-      ])
-      ->execute();
-    // \Drupal\levchik\Controller\LevchikController::getCats()[0];
+    else {
+      $this->saveCat($cat);
+    }
     $form_state->setRedirectUrl(Url::fromRoute('levchik.cats'));
   }
 
   /**
-   * {@inheritdoc}
+   * Saves cat data to db.
+   *
+   * @param object $cat
+   *   Object with cat data.
    */
-  private function validateEmail($email) {
+  public function saveCat(\stdClass $cat) {
+    $connection = \Drupal::service('database');
+    $file_fid = $cat->picture_fid;
+    if ($file_fid) {
+      $this->fileSavePermanent($file_fid);
+    }
+    $connection->insert('levchik')
+      ->fields(['name', 'created', 'email', 'picture_fid'])
+      ->values([
+        'name' => $cat->name,
+        'created' => \Drupal::time()->getRequestTime(),
+        'email' => $cat->email,
+        'picture_fid' => $file_fid ? $file_fid : 0,
+      ])
+      ->execute();
+  }
+
+  /**
+   * Updates cat data from db.
+   *
+   * @param object $cat
+   *   Object with cat data.
+   */
+  public function editCat(\stdClass $cat) {
+    $connection = \Drupal::service('database');
+    $file_fid = $cat->picture_fid;
+    if ($file_fid) {
+      $this->fileSavePermanent($file_fid);
+    }
+    $connection->update('levchik')
+      ->condition('id', $this->id)
+      ->fields([
+        'name' => $cat->name,
+        'email' => $cat->email,
+        'picture_fid' => $file_fid ? $file_fid : 0,
+      ])
+      ->execute();
+  }
+
+  /**
+   * Function to make fresh downloaded file permanent to drupal.
+   *
+   * @param int $fid
+   *   File id to make permanent.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function fileSavePermanent(int $fid) {
+    $file = File::load($fid);
+    $file->setPermanent();
+    $file->save();
+  }
+
+  /**
+   * Valid email can only contain letters, underscore and a hyphen, @ + ".".
+   *
+   * @param string $email
+   *   Email string to validate.
+   *
+   * @return bool
+   *   If email is valid.
+   */
+  private function validateEmail(string $email) {
     return !preg_match('/[^a-zA-Z_@.-]/i', $email) && strlen($email) > 4;
   }
 
   /**
-   * {@inheritdoc}
+   * Validates email and displays message according to task standards.
    */
   public function validateEmailAjax(array $form, FormStateInterface $form_state) {
     $errText = $this->t('Email is not valid');
@@ -169,7 +247,7 @@ class CatsForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Changes form on successful submit.
    */
   public function ajaxFunc(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
@@ -177,7 +255,7 @@ class CatsForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '.block-system-main-block',
-          $this->t("Thank's for your submission! Please refresh page to see the changes!"),
+          $this->t("Thanks for your submission! Please refresh page to see the changes!"),
         ),
       );
     }

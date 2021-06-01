@@ -1,6 +1,0 @@
-services:
-#  levchik.event_subscriber:
-#    class: Drupal\levchik\EventSubscriber\LevchikSubscriber
-#    arguments: ['@messenger']
-#    tags:
-#      - { name: event_subscriber }

@@ -33,12 +33,21 @@ class LevchikController extends ControllerBase {
   }
 
   /**
-   * Get's cats array from db.
+   * Searches cats or one cat in db.
+   *
+   * @param string $id
+   *   ID of the cat to search in db.
+   *
+   * @return array
+   *   Cat's objects array(May be only one particular cat).
    */
-  public function getCats() {
+  public static function getCats(string $id = NULL) {
     $database = \Drupal::database();
     $query = $database->select('levchik', 'lv');
     $query->fields('lv');
+    if (!is_null($id)) {
+      $query->condition('id', $id);
+    }
     $query->orderBy('created', 'DESC');
 
     $result = $query->execute()->fetchAll();

@@ -1,3 +1,17 @@
+{#
+/**
+ * @file
+ * Levchik module cat item twig template.
+ *
+ * Available variables:
+ * - cat: Cat object.
+ * - cat.picture_src: URL od cat's picture.
+ * - cat.created: Timestamp when cat was created.
+ * - cat.name: Name of the cat.
+ * - cat.email: email of cat's owner.
+ * - cat.id: id of cat's database instance.
+ */
+#}
 {% if cats is not empty %}
   <ul class="cats-containter">
   {% for cat in cats %}
@@ -9,7 +23,7 @@
         <span class="created-date">{{ "Cat was added"|t }}: {{ cat.created|date("j/m/Y H:i:s") }}</span>
         <span>{{ "Cat's name"|t }}: {{ cat.name }}</span>
         <span>{{ "Cat's owner email"|t }}: {{ cat.email }}</span>
-        {% if is_admin %}
+        {% if user.hasPermission('administer levchik cats') %}
           <div class="btn-group" role="group">
             <a class="btn btn-outline-danger use-ajax"
                data-dialog-options="{&quot;width&quot;:400}"
