@@ -5,9 +5,9 @@ namespace Drupal\levchik\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\file\Entity\File;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\levchik\Controller\LevchikController as LevchikController;
 
 /**
  * Defines a confirmation form to confirm deletion of cat by id.
@@ -40,18 +40,7 @@ class ConfirmDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $connection = \Drupal::service('database');
-    $query = $connection->select('levchik', 'lv');
-    $query->condition('id', $this->id);
-    $query->fields('lv', ['picture_fid']);
-    $fid = $query->execute()->fetchAll()[0]->picture_fid;
-    if ($fid != "0") {
-      $file = File::load($fid);
-      $file->delete();
-    }
-    $cat_deleted = $connection->delete('levchik')
-      ->condition('id', $this->id)
-      ->execute();
+    LevchikController::deleteCat([$this->id]);
     $form_state->setRedirectUrl(Url::fromRoute('levchik.cats'));
   }
 

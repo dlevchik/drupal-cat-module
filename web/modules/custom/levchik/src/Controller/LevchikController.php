@@ -16,6 +16,14 @@ class LevchikController extends ControllerBase {
    */
   public function build() {
     $cats = $this->getCats();
+    $renderer = \Drupal::service('renderer');
+    foreach ($cats as &$cat) {
+      $buttons = [
+        '#theme' => 'levchik_cats_button',
+        '#id' => $cat->id,
+      ];
+      $cat->cats_button = $renderer->render($buttons);
+    }
 
     $build = [
       'content' => [
@@ -29,19 +37,6 @@ class LevchikController extends ControllerBase {
       ],
     ];
 
-    return $build;
-  }
-
-  /**
-   * Builds the response table for administer cats page.
-   */
-  public function adminList() {
-    $build = [
-      'content' => [
-        '#type' => 'item',
-        '#markup' => $this->t('Hello! You can administer of your cats.'),
-      ],
-    ];
     return $build;
   }
 
@@ -77,6 +72,92 @@ class LevchikController extends ControllerBase {
       $item->picture_src = $url;
     }
     return $result;
+  }
+
+  /**
+   * Saves cat data to db.
+   *
+   * @param object $cat
+   *   Object with cat data.
+   */
+  public static function saveCat(\stdClass $cat) {
+    $connection = \Drupal::service('database');
+    $file_fid = $cat->picture_fid;
+    if ($file_fid) {
+      LevchikController::fileSavePermanent($file_fid);
+    }
+    $connection->insert('levchik')
+      ->fields(['name', 'created', 'email', 'picture_fid'])
+      ->values([
+        'name' => $cat->name,
+        'created' => \Drupal::time()->getRequestTime(),
+        'email' => $cat->email,
+        'picture_fid' => $file_fid ? $file_fid : 0,
+      ])
+      ->execute();
+  }
+
+  /**
+   * Updates cat data from db.
+   *
+   * @param object $cat
+   *   Object with cat data.
+   */
+  public static function editCat(\stdClass $cat) {
+    $connection = \Drupal::service('database');
+    $file_fid = $cat->picture_fid;
+    if ($file_fid) {
+      LevchikController::fileSavePermanent($file_fid);
+    }
+    $connection->update('levchik')
+      ->condition('id', $cat->id)
+      ->fields([
+        'name' => $cat->name,
+        'email' => $cat->email,
+        'picture_fid' => $file_fid ? $file_fid : 0,
+      ])
+      ->execute();
+  }
+
+  /**
+   * Deletes cat data from db.
+   *
+   * @param array $id
+   *   Array with cats id's to delete.
+   */
+  public static function deleteCat(array $id = []) {
+    if (empty($id)) {
+      return;
+    }
+    $connection = \Drupal::service('database');
+    $query = $connection->select('levchik', 'lv');
+    $query->condition('id', $id, 'IN');
+    $query->fields('lv', ['picture_fid']);
+    $result = $query->execute()->fetchAll();
+    foreach ($result as $item) {
+      $fid = $item->picture_fid;
+      if ($fid != "0") {
+        $file = File::load($fid);
+        $file->delete();
+      }
+    }
+    $cat_deleted = $connection->delete('levchik')
+      ->condition('id', $id, 'IN')
+      ->execute();
+  }
+
+  /**
+   * Function to make fresh downloaded file permanent to drupal.
+   *
+   * @param int $fid
+   *   File id to make permanent.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function fileSavePermanent(int $fid) {
+    $file = File::load($fid);
+    $file->setPermanent();
+    $file->save();
   }
 
 }

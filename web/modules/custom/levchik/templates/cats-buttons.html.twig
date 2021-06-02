@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Levchik module cat item twig template.
+ *
+ * Available variables:
+ * - id: id of cat's db entry.
+ */
+#}
+<div class="btn-group" role="group">
+  <a class="btn btn-outline-danger use-ajax"
+     data-dialog-options="{&quot;width&quot;:400}"
+     data-dialog-type="modal"
+     type="button"
+     href="/levchik/cats/{{ id }}/delete">{{ "Delete cat entity"|t }}</a>
+  <a class="btn btn-outline-warning use-ajax"
+     data-dialog-options="{&quot;width&quot;:400}"
+     data-dialog-type="modal"
+     type="button"
+     href="/levchik/cats/{{ id }}/edit">{{ "Edit cat entity"|t }}</a>
+</div>

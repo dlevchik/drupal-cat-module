@@ -27,7 +27,7 @@ levchik.edit_form:
 levchik.cats_list:
   path: '/admin/structure/cats'
   defaults:
+    _form: '\Drupal\levchik\Form\CatsAdminForm'
     _title: 'Administer Cats'
-    _controller: '\Drupal\levchik\Controller\LevchikController::adminList'
   requirements:
     _permission: 'administer levchik cats'

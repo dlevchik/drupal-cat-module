@@ -10,5 +10,3 @@ global-styling:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/drupal.dialog.ajax
-    - core/jquery.form

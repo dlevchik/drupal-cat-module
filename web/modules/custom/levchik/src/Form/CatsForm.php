@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Url;
-use Drupal\file\Entity\File;
 use Drupal\levchik\Controller\LevchikController as LevchikController;
 
 /**
@@ -99,6 +98,7 @@ class CatsForm extends FormBase {
         ],
       ],
     ];
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
 
     return $form;
   }
@@ -109,12 +109,10 @@ class CatsForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->clearErrors();
     if (mb_strlen($form_state->getValue('catName')) < 2 || mb_strlen($form_state->getValue('catName')) > 32) {
-      $errText = $this->t("Cat's name should be at least 2 characters but less than 32 characters.");
-      $form_state->setErrorByName('catName', $errText);
+      $form_state->setErrorByName('catName');
     }
     if (!$this->validateEmail($form_state->getValue('email'))) {
-      $errText = $this->t('Email is not valid');
-      $form_state->setErrorByName('email', $errText);
+      $form_state->setErrorByName('email');
     }
   }
 
@@ -127,71 +125,13 @@ class CatsForm extends FormBase {
     $cat->email = $form_state->getValue('email');
     $cat->picture_fid = $form_state->getValue('cat_img')[0];
     if (!is_null($this->id)) {
-      $this->editCat($cat);
+      $cat->id = $this->id;
+      LevchikController::editCat($cat);
     }
     else {
-      $this->saveCat($cat);
+      LevchikController::saveCat($cat);
     }
     $form_state->setRedirectUrl(Url::fromRoute('levchik.cats'));
-  }
-
-  /**
-   * Saves cat data to db.
-   *
-   * @param object $cat
-   *   Object with cat data.
-   */
-  public function saveCat(\stdClass $cat) {
-    $connection = \Drupal::service('database');
-    $file_fid = $cat->picture_fid;
-    if ($file_fid) {
-      $this->fileSavePermanent($file_fid);
-    }
-    $connection->insert('levchik')
-      ->fields(['name', 'created', 'email', 'picture_fid'])
-      ->values([
-        'name' => $cat->name,
-        'created' => \Drupal::time()->getRequestTime(),
-        'email' => $cat->email,
-        'picture_fid' => $file_fid ? $file_fid : 0,
-      ])
-      ->execute();
-  }
-
-  /**
-   * Updates cat data from db.
-   *
-   * @param object $cat
-   *   Object with cat data.
-   */
-  public function editCat(\stdClass $cat) {
-    $connection = \Drupal::service('database');
-    $file_fid = $cat->picture_fid;
-    if ($file_fid) {
-      $this->fileSavePermanent($file_fid);
-    }
-    $connection->update('levchik')
-      ->condition('id', $this->id)
-      ->fields([
-        'name' => $cat->name,
-        'email' => $cat->email,
-        'picture_fid' => $file_fid ? $file_fid : 0,
-      ])
-      ->execute();
-  }
-
-  /**
-   * Function to make fresh downloaded file permanent to drupal.
-   *
-   * @param int $fid
-   *   File id to make permanent.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  private function fileSavePermanent(int $fid) {
-    $file = File::load($fid);
-    $file->setPermanent();
-    $file->save();
   }
 
   /**
