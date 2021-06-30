@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\levchik\Controller\LevchikController as LevchikController;
 
 /**
@@ -76,6 +77,10 @@ class ConfirmDeleteForm extends ConfirmFormBase {
           '.confirm-delete-form',
           $this->t("Cat has been deleted!"),
         ),
+      );
+      $url = Url::fromRoute(LevchikController::getRouteName());
+      $response->addCommand(
+        new RedirectCommand($url->toString())
       );
     }
     return $response;

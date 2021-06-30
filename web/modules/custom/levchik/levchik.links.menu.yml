@@ -4,3 +4,8 @@ levchik.admin:
   parent: system.admin_structure
   route_name: levchik.cats_list
   weight: 10
+levchik.cats_link:
+  title: Cats
+  menu_name: main
+  route_name: levchik.cats
+  weight: 10

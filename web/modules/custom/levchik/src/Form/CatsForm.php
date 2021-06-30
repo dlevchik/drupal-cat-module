@@ -7,6 +7,9 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Url;
 use Drupal\levchik\Controller\LevchikController as LevchikController;
 
@@ -43,6 +46,8 @@ class CatsForm extends FormBase {
     if (!is_null($id)) {
       $this->cat = LevchikController::getCats($this->id)[0];
     }
+
+    $form['#attributes']['id'] = 'cats-form';
     $form['catName'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Your cat’s name:'),
@@ -99,6 +104,7 @@ class CatsForm extends FormBase {
       ],
     ];
     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    $form['#attached']['library'][] = 'levchik/form-styling';
 
     return $form;
   }
@@ -109,10 +115,10 @@ class CatsForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->clearErrors();
     if (mb_strlen($form_state->getValue('catName')) < 2 || mb_strlen($form_state->getValue('catName')) > 32) {
-      $form_state->setErrorByName('catName');
+      $form_state->setErrorByName('catName', $this->t("Name is not valid."));
     }
     if (!$this->validateEmail($form_state->getValue('email'))) {
-      $form_state->setErrorByName('email');
+      $form_state->setErrorByName('email', $this->t('Email is not valid.'));
     }
   }
 
@@ -197,6 +203,19 @@ class CatsForm extends FormBase {
           '.block-system-main-block',
           $this->t("Thanks for your submission! Please refresh page to see the changes!"),
         ),
+      );
+      $url = Url::fromRoute(LevchikController::getRouteName());
+      $response->addCommand(
+        new RedirectCommand($url->toString()),
+      );
+    }
+    else {
+      $form_selector = '#' . $form['#attributes']['id'];
+      $response->addCommand(
+        new ReplaceCommand($form_selector, $form),
+      );
+      $response->addCommand(
+        new PrependCommand($form_selector, ['#type' => 'status_messages']),
       );
     }
     return $response;

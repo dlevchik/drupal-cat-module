@@ -13,6 +13,7 @@
  * - cat.cats_button: buttons with actions for cat entity.
  */
 #}
+{{ attach_library('levchik/cats-styling') }}
 {% if cats is not empty %}
   <ul class="cats-containter">
   {% for cat in cats %}

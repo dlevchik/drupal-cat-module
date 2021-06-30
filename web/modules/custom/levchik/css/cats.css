@@ -1,0 +1,49 @@
+.cats-containter {
+  list-style: none;
+}
+.cats-containter .cats-item {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+  border: 2px solid #000;
+  border-radius: 10px;
+  padding: 20px;
+}
+.cats-containter .cats-item .img-container {
+  width: 20%;
+  min-width: 200px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.cats-containter .cats-item .img-container img {
+  width: 100%;
+  height: auto;
+}
+.cats-containter .cats-item .cat-data {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.cats-containter .cats-item .cat-data .btn-group {
+  margin-top: 20px;
+}

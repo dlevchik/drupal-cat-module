@@ -1,0 +1,11 @@
+cats-styling:
+  version: VERSION
+  css:
+    component:
+      css/cats.css: {}
+
+form-styling:
+  version: VERSION
+  css:
+    component:
+      css/form.css: {}

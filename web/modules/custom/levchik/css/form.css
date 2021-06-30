@@ -1,0 +1,9 @@
+fieldset.error input {
+  border-color: red;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(255, 121, 192, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(255, 121, 192, 0.25);
+}
+
+fieldset.error small {
+  color: red !important;
+}

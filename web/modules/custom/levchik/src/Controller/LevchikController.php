@@ -41,6 +41,16 @@ class LevchikController extends ControllerBase {
   }
 
   /**
+   * Get name of main cats route.
+   *
+   * @return string
+   *   name of main cats route
+   */
+  public static function getRouteName() {
+    return 'levchik.сats';
+  }
+
+  /**
    * Searches cats or one cat in db.
    *
    * @param string $id
@@ -67,7 +77,7 @@ class LevchikController extends ControllerBase {
         $url = Url::fromUri(file_create_url($uri))->toString();
       }
       else {
-        $url = "http://local.docksal/sites/default/files/levchik/underfined-cat.jpeg";
+        $url = "/modules/custom/levchik/img/underfined-cat.jpeg";
       }
       $item->picture_src = $url;
     }
