@@ -77,7 +77,7 @@ class LevchikController extends ControllerBase {
         $url = Url::fromUri(file_create_url($uri))->toString();
       }
       else {
-        $url = "/modules/custom/levchik/img/underfined-cat.jpeg";
+        $url = '/' . drupal_get_path('module', 'levchik') . "/img/underfined-cat.jpeg";
       }
       $item->picture_src = $url;
     }
